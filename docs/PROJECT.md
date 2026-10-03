@@ -182,6 +182,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 - [ ] 确认 `media-use` 的 BGM 路径在没有 HeyGen 账号时能做到什么程度
 - [ ] 确认工作台能否代为启动某一集的 Studio 预览
 - [ ] 写测试小集的讲稿（与 Zeemo 无关，30 秒左右）
+- [ ] P4：初始化时在 `demofoundry/` 里写 `.gitattributes`（`* text=auto eol=lf` + 媒体文件 binary）
 
 ## 10. 决策记录
 
@@ -219,6 +220,8 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 三个 skill：`demofoundry`（引擎、初始化、入口）、`demofoundry-mold`、`demofoundry-episode`；后两个用 `../demofoundry/` 引用引擎。v1 仍是「建模具、做一集」两个工作流 | skills CLI 只复制 skill 自己的文件夹，两个 skill 共用的引擎必须住在某个 skill 里（实测）；HyperFrames 也用兄弟路径互相引用 |
 | 2026-10-03 | DemoFoundry skill 默认装在项目级 | 随产品仓库提交，每个仓库锁自己的引擎版本；也是 CLI 默认 |
 | 2026-10-03 | 产品仓库里的视频目录叫 `demofoundry/` | — |
+| 2026-10-03 | 安装命令不加 `--copy`，README 不提开发者模式 | CLI 在 Windows 上建 junction（不需要开发者模式或管理员），失败时自动改为复制（读源码 + 实测） |
+| 2026-10-03 | 文本文件统一 LF：DemoFoundry 根目录加 `.gitattributes`（`* text=auto eol=lf`，媒体文件标 binary）；初始化时在用户的 `demofoundry/` 里写一份只管该目录的 `.gitattributes`；引擎写文本文件显式用 LF | 回归测试和「生成器有没有改出差异」要逐字节比对，Windows 的 `autocrlf` 会把签出的文件转成 CRLF；只管 `demofoundry/` 目录，不动用户仓库根目录和全局配置 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险
@@ -250,10 +253,11 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | --- | --- | --- |
 | 命令名：`python` / `python3`，`npx.cmd` / `npx` | zeedemo `voice.py` 在 Windows 上调不到 `npx` | 脚本里统一查找可执行文件，或用 `uv` 统一入口 |
 | 转写引擎 | zeedemo 写死 Parakeet，只能在 Apple 芯片上跑 | 默认 faster-whisper（两边都能用），Parakeet 作 Mac 可选加速 |
-| 符号链接 | zeedemo 靠符号链接共享组件库，Windows 需开发者模式 | 新形态引擎住在 skill 目录，不用符号链接 |
+| 符号链接 | zeedemo 靠符号链接共享组件库，Windows 需开发者模式 | 新形态引擎住在 skill 目录，不用符号链接；skills CLI 在 Windows 上用 junction，失败自动复制 |
 | 硬编码路径 | `cover.py` 写死无头浏览器路径格式 | 跨平台查找 |
 | 临时空间 | Windows 的 C 盘常常不够 4K 渲染 | 临时目录可配置 |
 | 控制台编码 | 中文 Windows 默认不是 UTF-8 | 脚本输出显式用 UTF-8 |
+| 换行符 | Windows 的 `autocrlf=true` 签出时转 CRLF | `.gitattributes` 统一 LF；脚本写文件显式用 LF |
 
 ## 12. 参考
 

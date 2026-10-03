@@ -1,6 +1,6 @@
 # P1 · 抽取清单
 
-> 状态：**草稿，待认可**（2026-10-03）
+> 状态：**草稿 v2，待认可**（2026-10-03）。v2 在通读 zeedemo 全仓库后补了 §8–§9，修正了 `word_time`
 > 范围：zeedemo 的 `shared/gen/zgen.py`、`shared/gen/zui.py`、`shared/tools/*.py`，逐函数标注；其余来源按文件列在最后。
 > 读法：这份清单只回答「搬不搬、怎么搬」，具体搬的动作在 P2 做。
 
@@ -31,7 +31,7 @@
 | --- | --- | --- | --- |
 | `write` / `write_json` / `load_json` | 读写文件 | 通用 | UTF-8 + LF |
 | `load_words` | 读 `words.json` | 通用 | |
-| `word_time` | 词 → 时间（取第一次出现） | **改造** | 这是「提示点时间线」的雏形。改成具名提示点：`cue('click-generate')`，提示点由讲稿标记生成，同一个词出现多次时不再靠「第一次」碰运气 |
+| `word_time` | 词 → 时间（取第一次出现） | **改造** | 每集都包一层 `W(片段, 词)`，按旁白片段限定范围，跨片段重名不会取错；`TIMELINE.md` 的「关键词 → 画面事件」表就是提示点时间线。改造成具名提示点，把这张表变成数据：`cue('sec2', 'Character')`，同片段内重复的词用序号区分 |
 | `wav_duration` | wav 时长 | 通用 | |
 | `Timeline` | 收集 GSAP 行，支持整体平移 `offset` | 通用 | 放进「HyperFrames 输出模块」（PROJECT §6） |
 | `Camera` | 镜头表 + 移动序列；光标操作时镜头在动直接报错 | 通用 | 画幅参数化；`ease` 默认值留着 |
@@ -135,7 +135,54 @@
 | `workbench/`（`server.py`、`test_server.py`、`dist/`） | — | P5 重新设计时再标注 |
 | 上游脚本：`carve.mjs`（`hyperframes-audio`）、`seam-stamp.mjs` / `seam-gate.mjs`（`motion-doctrine`） | 不搬 | 通过锁版本的上游 skill 调用。注意 `motion-doctrine` 在上游仓库的 `.agents/skills/` 下（不是 `skills/`），算上游内部 skill，接口稳定性要在 P2 确认 |
 
-## 待定（需要你拍板）
+## 8. 每集 `gen.py` 里反复出现的辅助函数（v1 漏掉的）
 
-1. **连线几何要不要重写进引擎？** `wire_between` / `bez_len` 在 `zui.py` 里（不搬的文件），但它们是纯几何、和 Zeemo 样式无关。我建议在引擎里按同样的算法重写一份（端点外移量作参数），这样节点编辑器类产品能直接用；不重写的话，每个用户的模具要各自写一份。
-2. **`media.py` 的切点检测和 `measure-reference.py` 要不要进 v1？** 两个都通用，但 v1 的流程里用不上。我倾向 P2 先不搬，减少依赖（尤其 OpenCV）。
+每集生成器里都有一批自己写的小函数，其中不少在 3–4 集里各写过一遍（第七集的备份目录不算）。它们就是 PROJECT §7 要的「场景级函数」的现成来源，P2 收进引擎。
+
+| 函数 | 出现在 | 做什么 | 标注 |
+| --- | --- | --- | --- |
+| `reveal` | 第四到七集（4 集） | 扫光出图 + 收起「生成中」 | 通用 |
+| `spin` | 第五、六、七集 | 「生成中」转圈，转速按时长算 | 通用 |
+| `pop_in` / `appear` / `appear_node` | 第四到七集 | 弹层 / 节点带缩放淡入 | 通用 |
+| `cls` | 第五、六、七集 | 用 `tl.set` 切 className（状态切换的标准做法） | 通用 |
+| `wire` / `draw_wire` / `wire_on` | 第四到七集 | 登记连线、描线长出、直接显示 | 通用（依赖连线几何，见决策记录） |
+| `hl_box` / `hl_on`，`hl_dash` / `hl_dash_box` | 第五、六、七集 | 讲解用的虚线描框，顺时针画出 | 通用 |
+| `line_hl` | 第七集 | 文本整行高亮 | 通用 |
+| `swap` | 第七集 | 同一时刻换两层：分开 hide / show 哪怕差 0.01s，60fps 下会空一帧导致频闪（2026-09-30 成片实测） | 通用，**必须进引擎** |
+| `dim` | 第七集 | 压暗不在讲的部分 | 通用 |
+| `pulses` | 第七集 | 连线上的能量流光点 | 通用 |
+| `halo` / `glow_reveal` | 第七集 | 节点背光，颜色从图片主色自动取（依赖 PIL） | 通用 |
+| `video_block` / `video_or_ph` | 第七集 | 节点里的视频：首帧 / 末帧叠层、每段只播一遍不循环 | 通用 |
+| `placeholder` / `img_or_ph` / `has` / `mpath` | 第七集 | 素材还没到时画占位，放进目录后重跑即替换 | 通用 |
+| `preset_flow` | 第七集 | 「点节点 → 工具条 → 下拉 → 选预设 → Generate → 新节点生成 → 出图」整套 | 场景函数的样板；里面的锚点是 Zeemo 的，机制通用 |
+| 展示卡飞进节点（FLIP）、`node_screen` / `scr_rect` | 第七集 | 屏幕空间的卡片飞到某个镜头下的节点位置 | 通用；`node_screen` 和 `Camera.scr` 重复，合并 |
+| `media` / `sample` / `palette` / `node` | 第二到六集 | 各集自己的素材路径、取色、节点写法 | 被 `zui.py` 和第七集的写法取代，不搬 |
+
+另外，第七集 `gen.py` 里的**混音**也该收进引擎配置，而不是每集手写：
+
+| 做法 | 现在在哪 |
+| --- | --- |
+| 旁白偏轻时每条挂 `gain +6 → limiter −1`（画布 TTS 约 −22 LUFS） | 第六、七集 `VO_CHAIN` |
+| 成品原声段 BGM 让位（−7dB，压 / 回 0.9s / 1.2s） | 第七集 `fx.n4.gain` 自动化 |
+| 整片音量弧线：63%–71% 下潜 −3dB、片尾卡顶起 +2.5dB | 第六、七集，追加在 carve 链后的 `n4` 节点 |
+
+## 9. 其余漏掉的文件
+
+| 文件 | 标注 | 备注 |
+| --- | --- | --- |
+| `videos/zeemo-canvas-image-node/_build/bgm-extend.py` | 通用 | 曲子比片长短时，按乐句结构在最像的位置重复几小节、交叉淡化接长，不循环硬接。和 BGM 裁剪命令（`shared/assets/bgm/README.md` 里的 ffmpeg 淡入淡出）一起做成引擎的「BGM 按片长适配」 |
+| `videos/zeemo-canvas-ugc-ad/assets/bgm/compose.py` | 不搬 | 代码合成音乐的试验，用户否掉了 |
+| `.claude/skills/zeemo-tutorial/scripts/status.py` | 改造 | 按文件判断一集做到哪个阶段。归做一集 skill；检查项改成五个阶段，去掉符号链接和 Zeemo 标题后缀的检查 |
+| `shared/proof/video-node.gen.py` | 通用（做法） | 验收页直接调标记函数生成，标记只存一份。模具约定采用这个做法 |
+| `reference/ui/*/figma-recreation/structure.test.mjs` | 专有 | Figma 复刻页的结构测试。做法可以参考：归一化之后的组件可以有同样的结构测试 |
+| `videos/zeemo-canvas-image-to-image/_harness.html` | 不搬 | 单独加载一个子合成来调试；`make-fingerprint` 覆盖了同样的需要 |
+| `shared/docs/FEATURE-MAP.md`、`SERIES-PLAN.md` | 专有 | Zeemo 产品功能地图和排期。对应到 DemoFoundry 是「产品地图」和「系列计划」两个模板，P4 再定 |
+
+## zeedemo 有未提交的改动
+
+读源码时 zeedemo 工作区有 22 处没提交，包括第七集整个目录、`video-node` 子库和它的验收页，以及 `zui.py`、`voice.py`、`recording.py`、`cover.py`、`new-episode.py` 的修改。**这份清单按工作区的最新版本写**；P2 搬代码也从工作区搬。要不要先在 zeedemo 里提交，由你决定（DemoFoundry 这边不动 zeedemo）。
+
+## 已定（2026-10-03）
+
+1. 连线几何在引擎里按同样的算法重写一份（端点外移量作参数），`zui.py` 仍不搬。
+2. 切点检测和 `measure-reference.py` 不进 v1。

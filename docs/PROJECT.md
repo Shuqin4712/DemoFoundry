@@ -222,6 +222,14 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 产品仓库里的视频目录叫 `demofoundry/` | — |
 | 2026-10-03 | 安装命令不加 `--copy`，README 不提开发者模式 | CLI 在 Windows 上建 junction（不需要开发者模式或管理员），失败时自动改为复制（读源码 + 实测） |
 | 2026-10-03 | 文本文件统一 LF：DemoFoundry 根目录加 `.gitattributes`（`* text=auto eol=lf`，媒体文件标 binary）；初始化时在用户的 `demofoundry/` 里写一份只管该目录的 `.gitattributes`；引擎写文本文件显式用 LF | 回归测试和「生成器有没有改出差异」要逐字节比对，Windows 的 `autocrlf` 会把签出的文件转成 CRLF；只管 `demofoundry/` 目录，不动用户仓库根目录和全局配置 |
+| 2026-10-03 | 连线几何（`wire_between` / `bez_len` 的算法）在引擎里重写一份，端点外移量作参数；`zui.py` 仍不搬 | 纯几何、和 Zeemo 样式无关，节点编辑器类产品都用得上 |
+| 2026-10-03 | 切点检测（`media.py`）和 `measure-reference.py` 不进 v1 | v1 流程用不上；减少依赖（OpenCV） |
+| 2026-10-03 | 模具前缀在初始化时从产品名生成，写进 `mold.json`，之后不改 | 类名和缩放变量都带前缀，中途改代价大 |
+| 2026-10-03 | 产品字体：能再分发的放 `mold/theme/fonts/`，不能的进 `.gitignore`，README 写取得方式 | 商用字体常不许再分发 |
+| 2026-10-03 | 成片默认 60fps，响度 −16 LUFS ±1、真峰值 ≤ −1 dBTP | zeedemo 已发布成片实测如此，听感和流畅度已验证 |
+| 2026-10-03 | 发布包里的 MP4 / GIF 默认不提交进 git | 体积大，可从源码重新渲染 |
+| 2026-10-03 | v1 封面只做一个默认版式；多版式封面模板仍在待办池 | 发布包要封面，但不扩大 v1 范围 |
+| 2026-10-03 | 模具的组件标记用 Python 函数（`mold/ui.py`，沿用 zeedemo `zui.py`），锚点常数和组件写在一起；验收页由同一套函数生成（沿用 `video-node.gen.py`），另加锚点验收 | 锚点和组件内部尺寸都要计算；zeedemo 六集实际在用；标记只存一份 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险

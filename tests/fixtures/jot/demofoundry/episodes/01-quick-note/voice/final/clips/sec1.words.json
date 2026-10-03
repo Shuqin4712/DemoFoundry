@@ -1,0 +1,52 @@
+{
+ "words": [
+  {
+   "id": "w0",
+   "text": "Click",
+   "start": 0.05,
+   "end": 0.427
+  },
+  {
+   "id": "w1",
+   "text": "New",
+   "start": 0.494,
+   "end": 0.72
+  },
+  {
+   "id": "w2",
+   "text": "note,",
+   "start": 0.76,
+   "end": 1.061
+  },
+  {
+   "id": "w3",
+   "text": "and",
+   "start": 1.115,
+   "end": 1.341
+  },
+  {
+   "id": "w4",
+   "text": "an",
+   "start": 1.381,
+   "end": 1.531
+  },
+  {
+   "id": "w5",
+   "text": "empty",
+   "start": 1.558,
+   "end": 1.935
+  },
+  {
+   "id": "w6",
+   "text": "note",
+   "start": 2.002,
+   "end": 2.303
+  },
+  {
+   "id": "w7",
+   "text": "opens.",
+   "start": 2.356,
+   "end": 2.733
+  }
+ ]
+}

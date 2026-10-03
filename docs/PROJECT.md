@@ -4,7 +4,7 @@
 > 讨论过程和历史版本在设想文档 [生成式视频流水线 · 开源设想](https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9)，那边只作参考。
 > 发现这里写错了：直接改，或在「决策记录」里加一行说明为什么改。
 
-**当前阶段：P2 引擎抽取**（P1 已完成，待开工） · 最后更新：2026-10-03
+**当前阶段：P2 引擎抽取** · 最后更新：2026-10-03
 
 ---
 
@@ -149,7 +149,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | --- | --- | --- | --- | --- |
 | P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | ✅ |
 | P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | ✅ |
-| P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | ⬜ |
+| P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | 🔄 |
 | P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | ⬜ |
 | P4 两个 skill | 建模具（`product-ui-rebuild` 泛化 + 归一化 + 质检）；做一集（`zeemo-tutorial` 泛化，两种模式）；初始化命令 | 空仓库装 skill → 初始化 → 出预览，全程无需手工干预 | 大 | ⬜ |
 | P5 工作台开源版 | 重新设计并定功能范围；从仓库文件自动读数据；看板、模具浏览、预览入口；`serve.py` 并入；做成可选安装 | 界面冻结，可作拍摄对象 | 中 | ⬜ |
@@ -181,8 +181,13 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 - [ ] 选型：转写引擎按平台（Windows faster-whisper、Mac Parakeet）
 - [ ] 确认 `media-use` 的 BGM 路径在没有 HeyGen 账号时能做到什么程度
 - [ ] 确认工作台能否代为启动某一集的 Studio 预览
-- [ ] 写测试小集的讲稿（与 Zeemo 无关，30 秒左右）
+- [x] 写测试小集的讲稿（与 Zeemo 无关，30 秒左右）：虚构笔记应用 Jot，5 段约 24 秒（2026-10-03，`tests/fixtures/jot/`）
 - [ ] P4：初始化时在 `demofoundry/` 里写 `.gitattributes`（`* text=auto eol=lf` + 媒体文件 binary）
+- [ ] P4：初始化时在 `demofoundry/` 里写 `.gitignore`：`episodes/*/assets/mold/`（生成时同步的模具副本）、`voice/_takes/`、`renders/`
+- [ ] 决定是否安装 `uv`（P2 的「脚本改用 uv」卡在这里；引擎已有标准 `pyproject.toml`）
+- [ ] P3：BGM 接长（泛化 zeedemo `bgm-extend.py`）；测试小集换成真的本地免费配音
+- [ ] P3 / P4：封面机制 + DemoFoundry 自己的默认封面模板
+- [ ] P4：建模具骨架、验收页模板（`solve()` / `recheck()`）、进度检查 `status.py` 搬进两个 skill
 
 ## 10. 决策记录
 
@@ -233,6 +238,10 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 界面证据优先级：Figma（节点导出或复刻 HTML）> 录屏 + 截图；只靠截图逐项量测是兜底 | zeedemo 第一集纯截图重建还原度较低；第二集起 Figma 复刻 + 录屏 + 截图并行效果好 |
 | 2026-10-03 | 修订「还原精度 ±0.3px」：还原精度靠证据优先级保证——Figma 用原值（结构测试 + 与复刻页叠加差分为 0），录屏验行为和状态（逐行并排），截图验尺寸颜色（±0.3px 对表）；自主模式也跑，不过就停 | zeedemo 第二集起只有录屏的部分量不出 ±0.3px；Figma 原值比从像素反推更准 |
 | 2026-10-03 | Figma 输入多一条候选：Figma MCP 取设计数据 + agent 改写成独立 HTML（zeedemo 现有复刻就是这么来的：Figma MCP + Codex，用户确认；推断依据见模具约定 §0）；和上游 `hyperframes figma` 怎么选，放进 Figma 实验一起比 | 这条路在 zeedemo 已验证效果好 |
+| 2026-10-03 | 锁定 HyperFrames 0.8.114（命令行与上游 skill tag `v0.8.114` 一致）；以后升级先跑回归测试 | 实测：zeedemo 第七集复制到临时目录，0.8.34 与 0.8.114 的 `check` 结果完全相同；整片草稿渲染时长、响度（−16.7 LUFS、峰值 −1.0）一致，画面平均 PSNR 43 dB，只有节点里 24fps 视频在 30fps 渲染时有 17 个孤立帧取到相邻源帧；0.8.34 在 C 盘剩 19GB 时因帧缓存要 20GB 失败，0.8.114 不受影响 |
+| 2026-10-03 | GSAP 用 HyperFrames 模板里的固定版本 CDN（`gsap@3.14.2`），仓库不分发 GSAP 文件 | 和上游一致；避免在开源仓库里再分发第三方库 |
+| 2026-10-03 | 生成时把模具的 css / icons / fonts 同步到集目录 `assets/mold/`（不提交），不用符号链接 | HyperFrames 只读集目录；符号链接在 Windows 要开发者模式 |
+| 2026-10-03 | 测试小集用虚构笔记应用「Jot」，模具是夹具（不是从证据重建的），回归 = 重新生成后和提交的产物逐字节比较 | 与 Zeemo 无关；不依赖网络和配音即可跑 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险
@@ -271,6 +280,8 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 换行符 | Windows 的 `autocrlf=true` 签出时转 CRLF | `.gitattributes` 统一 LF；脚本写文件显式用 LF |
 
 ## 12. 参考
+
+- P2 引擎抽取记录（对拍结果、改掉的问题、挪到后面的项）：[p2-extraction-log.md](p2-extraction-log.md)
 
 - 设想文档（讨论过程）：<https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9>
 - 来源仓库 zeedemo（Zeemo 教程系列生产仓库，`D:\zeedemo\zeedemo`）：`shared/gen/`、`shared/tools/`、`shared/techniques/`、`workbench/`、`.claude/skills/product-ui-rebuild/`、`.claude/skills/zeemo-tutorial/`

@@ -5,4 +5,4 @@ description: Placeholder for the DemoFoundry episode workflow (script, voice, ge
 
 # DemoFoundry · Episode
 
-Placeholder. Engine lives in [`../demofoundry/engine/`](../demofoundry/engine/README.md).
+Placeholder (workflow lands in P4). Engine lives in [`../demofoundry/engine/`](../demofoundry/engine/README.md).

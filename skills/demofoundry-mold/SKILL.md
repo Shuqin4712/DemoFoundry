@@ -5,4 +5,4 @@ description: Placeholder for the DemoFoundry mold workflow (rebuild product UI c
 
 # DemoFoundry · Mold
 
-Placeholder. Engine lives in [`../demofoundry/engine/`](../demofoundry/engine/README.md).
+Placeholder (workflow lands in P4). Engine lives in [`../demofoundry/engine/`](../demofoundry/engine/README.md).

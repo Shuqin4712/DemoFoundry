@@ -1,0 +1,52 @@
+{
+ "words": [
+  {
+   "id": "w0",
+   "text": "Let's",
+   "start": 0.05,
+   "end": 0.454
+  },
+  {
+   "id": "w1",
+   "text": "see",
+   "start": 0.525,
+   "end": 0.767
+  },
+  {
+   "id": "w2",
+   "text": "how",
+   "start": 0.81,
+   "end": 1.052
+  },
+  {
+   "id": "w3",
+   "text": "quick",
+   "start": 1.095,
+   "end": 1.499
+  },
+  {
+   "id": "w4",
+   "text": "notes",
+   "start": 1.57,
+   "end": 1.974
+  },
+  {
+   "id": "w5",
+   "text": "work",
+   "start": 2.045,
+   "end": 2.368
+  },
+  {
+   "id": "w6",
+   "text": "in",
+   "start": 2.425,
+   "end": 2.587
+  },
+  {
+   "id": "w7",
+   "text": "Jot.",
+   "start": 2.615,
+   "end": 2.857
+  }
+ ]
+}

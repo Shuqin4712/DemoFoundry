@@ -1,0 +1,49 @@
+{
+ "voice": "fixture (synthetic word times, silent audio)",
+ "speed": 1.0,
+ "dash_pause_ms": 200,
+ "end_hold_after_cta": 5.0,
+ "total": 23.6,
+ "clips": [
+  {
+   "clip": "sec0",
+   "start": 0.2,
+   "dur": 3.0,
+   "end": 3.2,
+   "gap_before": 0.2,
+   "gap_reason": "intro"
+  },
+  {
+   "clip": "sec1",
+   "start": 4.2,
+   "dur": 2.9,
+   "end": 7.1,
+   "gap_before": 1.0,
+   "gap_reason": "pill leaves, window rises in"
+  },
+  {
+   "clip": "sec2",
+   "start": 7.9,
+   "dur": 3.1,
+   "end": 11.0,
+   "gap_before": 0.8,
+   "gap_reason": "camera settles on the editor"
+  },
+  {
+   "clip": "sec3",
+   "start": 12.2,
+   "dur": 3.2,
+   "end": 15.4,
+   "gap_before": 1.2,
+   "gap_reason": "typing finishes, Saved shows"
+  },
+  {
+   "clip": "sec4",
+   "start": 16.4,
+   "dur": 2.2,
+   "end": 18.6,
+   "gap_before": 1.0,
+   "gap_reason": "toast holds"
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "product": "Jot",
+  "series": "Jot Tutorials",
+  "canvas": [1920, 1080],
+  "fps": 60,
+  "hyperframes": "0.8.114",
+  "theme": {
+    "ground": "#0b0d10",
+    "ink": "#f3f5f7",
+    "ink_mute": "#8a9099",
+    "corner_ink": "#7c828b",
+    "badge_ink": "#9aa1aa",
+    "accent": "#1fb39a",
+    "accent_soft": "#9be7d8",
+    "accent_glow_rgb": "31,179,154",
+    "font_family": "Inter",
+    "font_stack": "Inter, Arial, sans-serif",
+    "badge_text": "Jot Tutorials",
+    "site": "jot.example",
+    "logo_alt": "Jot"
+  },
+  "mix": { "vo_bus": 0.75, "bgm_vol": 0.32 }
+}

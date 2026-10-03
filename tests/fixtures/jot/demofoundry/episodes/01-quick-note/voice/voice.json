@@ -1,0 +1,20 @@
+{
+ "engine": "import",
+ "voice_name": "fixture (synthetic word times, silent audio)",
+ "dash_pause_ms": 200,
+ "end_hold": 5.0,
+ "paragraphs": {
+  "p0": "Let's see how quick notes work in Jot.",
+  "p1": "Click New note, and an empty note opens.",
+  "p2": "Type a title — it saves as you type.",
+  "p3": "Press Share to copy a link for your team.",
+  "p4": "Jot it down, share it fast."
+ },
+ "clips": [
+  {"clip": "sec0", "para": "p0", "text": "Let's see how quick notes work in Jot.", "gap_before": 0.2, "gap_reason": "intro", "fixture_dur": 3.0},
+  {"clip": "sec1", "para": "p1", "text": "Click New note, and an empty note opens.", "gap_before": 1.0, "gap_reason": "pill leaves, window rises in", "fixture_dur": 2.9},
+  {"clip": "sec2", "para": "p2", "text": "Type a title — it saves as you type.", "gap_before": 0.8, "gap_reason": "camera settles on the editor", "fixture_dur": 3.1},
+  {"clip": "sec3", "para": "p3", "text": "Press Share to copy a link for your team.", "gap_before": 1.2, "gap_reason": "typing finishes, Saved shows", "fixture_dur": 3.2},
+  {"clip": "sec4", "para": "p4", "text": "Jot it down, share it fast.", "gap_before": 1.0, "gap_reason": "toast holds", "fixture_dur": 2.2}
+ ]
+}

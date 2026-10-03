@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>end-card</title>
+</head>
+<body>
+  <template>
+    <style>
+      
+      #root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;font-family:Inter, Arial, sans-serif;color:#f3f5f7}
+      #ec-ground{position:absolute;inset:0;background:#0b0d10}
+      #ec-lockup{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:Inter, Arial, sans-serif}
+      #ec-stack{display:flex;flex-direction:column;align-items:center}
+      #ec-logo{display:block;width:470px;height:auto;margin:0 auto}
+      #ec-cta{margin:18px 0 0;color:#8a9099;font-size:18px;font-weight:400;letter-spacing:.11em;text-transform:uppercase}
+      #ec-pill{display:inline-flex;margin-top:30px;padding:13px 23px;border:1px solid #1fb39a;border-radius:999px;box-shadow:0 0 28px rgba(31,179,154,.42);font-size:14px}
+      #ec-by{position:absolute;left:0;right:0;bottom:80px;display:flex;justify-content:center;align-items:center;gap:8px;font-size:14px;color:#8a9099}
+      #ec-by img{width:18px;height:18px}
+      .ec-spark{position:absolute;width:5px;height:5px;border-radius:50%;background:#9be7d8;box-shadow:0 0 12px #1fb39a}
+    </style>
+    <div id="root" data-composition-id="end-card" data-width="1920" data-height="1080" data-duration="4.0">
+      <!-- generated; edit the generator, not this file -->
+      <div id="ec-ground" class="clip" data-start="0" data-duration="4.0"></div>
+      <div id="ec-lockup"><div id="ec-stack">
+      
+      <p id="ec-cta">Jot it down, share it fast.</p><span id="ec-pill">jot.example</span>
+      </div><i class="ec-spark" style="left:31%;top:44%"></i><i class="ec-spark" style="left:69%;top:39%"></i><i class="ec-spark" style="left:65%;top:67%"></i></div>
+
+    </div>
+    <script>
+      gsap.set("#ec-lockup", {autoAlpha:0});
+      gsap.set(".ec-spark", {scale:0});
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#ec-lockup", {autoAlpha:1, duration:0.34}, 0.03);
+      tl.to(".ec-spark", {scale:1, duration:0.5, ease:"back.out(1.7)", stagger:0.1}, 0.03);
+      window.__timelines["end-card"] = tl;
+    </script>
+  </template>
+</body>
+</html>

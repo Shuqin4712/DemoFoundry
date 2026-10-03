@@ -1,0 +1,58 @@
+{
+ "words": [
+  {
+   "id": "w0",
+   "text": "Press",
+   "start": 0.05,
+   "end": 0.455
+  },
+  {
+   "id": "w1",
+   "text": "Share",
+   "start": 0.527,
+   "end": 0.932
+  },
+  {
+   "id": "w2",
+   "text": "to",
+   "start": 1.003,
+   "end": 1.165
+  },
+  {
+   "id": "w3",
+   "text": "copy",
+   "start": 1.194,
+   "end": 1.518
+  },
+  {
+   "id": "w4",
+   "text": "a",
+   "start": 1.575,
+   "end": 1.656
+  },
+  {
+   "id": "w5",
+   "text": "link",
+   "start": 1.67,
+   "end": 1.994
+  },
+  {
+   "id": "w6",
+   "text": "for",
+   "start": 2.052,
+   "end": 2.295
+  },
+  {
+   "id": "w7",
+   "text": "your",
+   "start": 2.338,
+   "end": 2.662
+  },
+  {
+   "id": "w8",
+   "text": "team.",
+   "start": 2.719,
+   "end": 3.043
+  }
+ ]
+}

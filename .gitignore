@@ -5,3 +5,9 @@ node_modules/
 renders/
 .DS_Store
 .env
+
+# Episode build artefacts (regenerated from the mold / voice pipeline)
+**/episodes/*/assets/mold/
+**/voice/_takes/
+tests/fixtures/**/voice/final/clips/*.wav
+*.egg-info/

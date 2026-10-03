@@ -1,0 +1,22 @@
+/* Jot mold (FIXTURE: hand-written for the regression test, not measured from a product). Units: 1x logical px. */
+.jot-window{position:absolute;width:1200px;height:720px;border-radius:14px;overflow:hidden;background:#f7f8fa;outline:1px solid #d9dde3;outline-offset:-1px;font-family:Inter,Arial,sans-serif;color:#1d2228;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.jot-top{position:absolute;left:0;top:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#ffffff;border-bottom:1px solid #e4e7eb}
+.jot-brand{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.jot-share{flex:0 0 auto;width:92px;height:36px;border:0;border-radius:8px;background:#0d7a67;color:#fff;font:600 15px Inter,Arial,sans-serif}
+.jot-side{position:absolute;left:0;top:64px;bottom:0;width:280px;padding:32px 20px 20px;background:#eef1f4;border-right:1px solid #e4e7eb}
+.jot-new{position:absolute;left:20px;top:32px;width:240px;height:40px;border:1px dashed #9aa4ae;border-radius:8px;background:transparent;color:#1d2228;font:600 15px Inter,Arial,sans-serif}
+.jot-list{margin-top:56px;display:flex;flex-direction:column;gap:8px}
+.jot-item{padding:12px 14px;border-radius:8px;background:#fff;display:flex;flex-direction:column;gap:4px}
+.jot-item.is-on{outline:2px solid #0d7a67;outline-offset:-2px}
+.jot-item b{font-size:15px}
+.jot-item span{font-size:13px;color:#6b737c}
+.jot-editor{position:absolute;left:280px;top:64px;right:0;bottom:0;padding:48px}
+.jot-doc{position:relative}
+.jot-title{position:relative;height:44px;font-size:34px;font-weight:700;letter-spacing:-.02em}
+.jot-ph{position:absolute;left:0;top:0;color:#848b93}
+.jot-tt{position:absolute;left:0;top:0;white-space:nowrap}
+.jot-lines{margin-top:28px;display:flex;flex-direction:column;gap:16px}
+.jot-lines i{display:block;height:12px;border-radius:6px;background:#e3e7eb}
+.jot-saved{position:absolute;right:0;top:12px;font-size:13px;color:#6b737c}
+.jot-toast{position:absolute;padding:14px 18px;border-radius:10px;background:#1d2228;color:#fff;font:500 16px Inter,Arial,sans-serif;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.tt-ch{display:inline}.tt-car{display:inline-block;width:2px;height:34px;margin-left:1px;vertical-align:-6px;background:#0d7a67}

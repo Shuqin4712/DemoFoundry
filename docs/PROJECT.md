@@ -53,6 +53,48 @@
 | skill | 建模具、做一集 | skill 目录 |
 | 工作台（可选） | 系列看板、模具浏览、预览入口 | skill 目录，读用户仓库的数据 |
 
+**目录结构**（2026-10-03 定）
+
+DemoFoundry 仓库：
+
+```
+skills/
+  demofoundry/            引擎 + 初始化 + 入口
+    SKILL.md
+    engine/               生成器公共库；HyperFrames 输出收在一个模块里
+    tools/                配音、转写、素材、封面、录屏
+    techniques/           技法卡片
+    templates/studio/     初始化用的模板
+    scripts/              init、doctor（环境检查）
+  demofoundry-mold/       建模具：SKILL.md + references/，用 ../demofoundry/ 引用引擎
+  demofoundry-episode/    做一集：同上
+workbench/                工作台（P5，可选安装）
+tests/                    回归用的测试小集
+docs/
+```
+
+安装：`npx skills add Shuqin4712/DemoFoundry --skill '*'`，装在项目级（随产品仓库提交，每个仓库锁自己的引擎版本）。
+
+用户产品仓库里初始化出的目录：
+
+```
+demofoundry/
+  demofoundry.json        主题、声音、音乐、画幅；引擎版本和 HyperFrames 版本
+  mold/                   模具
+    evidence/             录屏、截图、Figma 导出、源码摘录
+    components/           归一化后的组件
+    qc/                   质检页 + 参考图
+    theme/                色板、字体
+    intro-outro/          片头片尾
+  assets/bgm/             背景音乐 + LICENSES.md（来源和授权）
+  episodes/01-<slug>/
+    SCRIPT.md             讲稿
+    voice/                配音和逐词时间
+    gen.py                本集生成器
+    composition/          生成出的 HyperFrames 工程（不手改）
+    publish/              MP4 · SRT · 封面 · 文案 · GIF
+```
+
 **工作台可插拔**：它只读仓库里的文件，出片不依赖它，不装也能完整出片。v1 不做面板级插件机制。工作台是示例集的拍摄对象、DemoFoundry 的门面，所以要**重新设计**；保留哪些功能（现有的上手指南、温馨提示、工作记录、搜索等）在 P5 和重新设计一起定。
 
 **和 zeedemo 的关系**：zeedemo 照常生产、不受影响，DemoFoundry 只从它复制代码；v1 之前两边不做双向同步，v1 稳定后再考虑把 zeedemo 迁到 DemoFoundry 引擎。
@@ -130,8 +172,8 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 
 - [x] 在 GitHub 建仓库：`Shuqin4712/DemoFoundry`，私有，Apache-2.0（2026-10-03）
 - [ ] 查 DemoFoundry 的商标和域名
-- [ ] 验证 skills CLI：一个仓库多个 skill 的安装；`skills-lock.json` 的恢复命令
-- [ ] 定 skill 目录结构和初始化后的视频目录结构
+- [x] 验证 skills CLI：一个仓库多个 skill 的安装；`skills-lock.json` 的恢复命令（2026-10-03，结论见 §11）
+- [x] 定 skill 目录结构和初始化后的视频目录结构（2026-10-03，见 §4）
 - [ ] 抽取清单：逐函数标注 `zgen.py`、`zui.py`、`shared/tools/*.py`
 - [ ] 模具约定草案：组件、缩放、锚点、质检页
 - [ ] 发布包规格：MP4、SRT、封面、文案、短片段的命名和尺寸
@@ -173,17 +215,34 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | zeedemo 不受影响，v1 前不做双向同步 | — |
 | 2026-10-03 | 工作台可插拔（可选安装），重新设计，功能范围 P5 再定 | 出片不该依赖它；它是示例集的门面 |
 | 2026-10-03 | skill 不按系统分支，平台差异由脚本内部消化；转写默认 faster-whisper | 一般 skill 不区分系统；Parakeet 只能在 Apple 芯片上跑 |
+| 2026-10-03 | 上游 HyperFrames skill 用 `heygen-com/hyperframes#<tag>` 锁版本，tag 和 HyperFrames 命令行版本一致；skills CLI 本身也锁版本（`npx skills@1.7.0`） | 不写 ref 的锁文件恢复时会装成上游最新版（实测） |
+| 2026-10-03 | 三个 skill：`demofoundry`（引擎、初始化、入口）、`demofoundry-mold`、`demofoundry-episode`；后两个用 `../demofoundry/` 引用引擎。v1 仍是「建模具、做一集」两个工作流 | skills CLI 只复制 skill 自己的文件夹，两个 skill 共用的引擎必须住在某个 skill 里（实测）；HyperFrames 也用兄弟路径互相引用 |
+| 2026-10-03 | DemoFoundry skill 默认装在项目级 | 随产品仓库提交，每个仓库锁自己的引擎版本；也是 CLI 默认 |
+| 2026-10-03 | 产品仓库里的视频目录叫 `demofoundry/` | 一看就知道是谁建的，不和用户已有的 `videos/` 冲突 |
+| 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险
 
 | 项 | 影响 | 怎么消解 |
 | --- | --- | --- |
-| skills CLI 能否一句话装多个 skill、恢复上游 skill | 安装体验 | P0 实测 |
+| ~~skills CLI 能否一句话装多个 skill、恢复上游 skill~~ | 安装体验 | 已验证（2026-10-03），见下方「skills CLI 实测」 |
 | 换一个产品，重建要多久、质检能否稳定通过 | 核心价值是否成立 | P6 数字 + 私下试验 |
 | HyperFrames 还在 0.8.x，升级可能破坏输出 | 维护成本 | 锁版本 + 回归测试 |
 | 上游 Figma 导入的质量 | v1 的 Figma 路径是否可靠 | Figma 实验（暂缓） |
 | Node + Python 双环境门槛 | 新用户流失 | `uv` + 初始化时环境检查 |
 | 只在 Windows 上验证（手头没有 Mac） | 跨平台问题 | 平台差异收在脚本内部（见下）；发布前找 Mac 用户试，或 CI |
+
+**skills CLI 实测**（`skills@1.7.0`，Windows，2026-10-03）
+
+| 问题 | 结论 |
+| --- | --- |
+| 一个仓库多个 skill | 可以。CLI 找出仓库里所有 `SKILL.md`；`--skill a b` 或 `--skill '*'` 一句装多个；`--list` 只列不装 |
+| 装进去的是什么 | **只复制 skill 自己那个文件夹**。仓库顶层的共享目录（如 `engine/`）不会装进去；skill 文件夹里的子目录会 |
+| 装到哪 | 只选 Claude Code 时直接复制到 `.claude/skills/<name>`；选多个 agent 时，正本放在 `.agents/skills/<name>`，`.claude/skills/<name>` 是指向正本的目录符号链接（本机能建；没开开发者模式的 Windows 用 `--copy`） |
+| 私有仓库 | 用本机 git 凭据克隆，和公开仓库同一条命令（占位 skill 阶段实测） |
+| 锁文件锁不锁版本 | **不写 ref 就不锁**。zeedemo 的 `skills-lock.json` 没有 ref，恢复时 26 个 skill 全装成上游最新版，哈希全变，锁文件也被改写。安装源写成 `heygen-com/hyperframes#v0.8.110` 时，锁文件会记下 `"ref"`，删掉重装后文件哈希一致 |
+| 恢复命令 | `npx skills experimental_install`。**只装到 `.agents/skills/`**（Codex、Cursor 等 universal agent），会忽略 `--agent`，不给 Claude Code 建 `.claude/skills/` |
+| 上游 skill 之间怎么共享文件 | HyperFrames 的 skill 直接用相对路径引用兄弟 skill（如 `../hyperframes-core/references/...`），前提是一起装 |
 
 **已知的 Windows / Mac 差异**（原则：skill 不按系统分支，脚本内部消化）
 

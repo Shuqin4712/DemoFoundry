@@ -163,7 +163,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | --- | --- | --- |
 | 上游 PR（先提打字效果） | P2 之后 | ⬜ |
 | 私下用其他产品界面试验（结果反哺约定，不进宣传） | P4 之后 | ⬜ |
-| Figma 实验：同一节点跑上游导入，和现成复刻、Figma PNG 三方差分 | 有可用 Figma 文件时 | ⏸ |
+| Figma 实验：同一节点跑上游 `hyperframes figma`、Figma MCP + agent 改写，和现成复刻、Figma PNG 差分；顺带查两条路各要什么 Figma 权限 | 有可用 Figma 文件时 | ⏸ |
 | 找老师：带两分钟预览问定位、MCP 优先级、推广渠道 | 示例第一集出预览 + README 有草稿 | ⬜ |
 
 **v1 之后的待办池**：更多场景函数和动效卡片 · 改前改后取证 · 封面模板 · 竖版 · 剪映导出 · 更多配音平台 · 社区模具 · zeedemo 改用 DemoFoundry 引擎 · 声明式描述与 MCP
@@ -231,6 +231,8 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | v1 封面只做一个默认版式；多版式封面模板仍在待办池 | 发布包要封面，但不扩大 v1 范围 |
 | 2026-10-03 | 模具的组件标记用 Python 函数（`mold/ui.py`，沿用 zeedemo `zui.py`），锚点常数和组件写在一起；验收页由同一套函数生成（沿用 `video-node.gen.py`），另加锚点验收 | 锚点和组件内部尺寸都要计算；zeedemo 六集实际在用；标记只存一份 |
 | 2026-10-03 | 界面证据优先级：Figma（节点导出或复刻 HTML）> 录屏 + 截图；只靠截图逐项量测是兜底 | zeedemo 第一集纯截图重建还原度较低；第二集起 Figma 复刻 + 录屏 + 截图并行效果好 |
+| 2026-10-03 | 修订「还原精度 ±0.3px」：还原精度靠证据优先级保证——Figma 用原值（结构测试 + 与复刻页叠加差分为 0），录屏验行为和状态（逐行并排），截图验尺寸颜色（±0.3px 对表）；自主模式也跑，不过就停 | zeedemo 第二集起只有录屏的部分量不出 ±0.3px；Figma 原值比从像素反推更准 |
+| 2026-10-03 | Figma 输入多一条候选：Figma MCP 取设计数据 + agent 改写成独立 HTML（zeedemo 现有复刻就是这么来的，推断依据见模具约定 §0）；和上游 `hyperframes figma` 怎么选，放进 Figma 实验一起比 | 这条路在 zeedemo 已验证效果好 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险

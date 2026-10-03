@@ -32,6 +32,13 @@ zeemo-ui-22182-1624/
   archive/              旧版本
 ```
 
+**它是怎么做出来的（推断，2026-10-03）**：用户是向老师要的复刻，不知道做法。从文件痕迹看，很可能是 **Figma MCP 取设计数据 + 编程 agent 改写**：
+
+- SVG 带 `preserveAspectRatio="none" overflow="visible" style="display: block;"`，图层名原样成了 id（`<g id="edit4"><path id="Union">`）——这是 Figma MCP 提供素材的写法，Figma 手动导出没有；
+- 每个子元素有真实的 Figma 子节点 id，只能从节点数据读到；Figma MCP 生成的代码正是逐元素标 `data-node-id`；
+- 第二集那份复刻的素材叫 `imgAiVideo.svg`、`imgComponent14.svg`，是 Figma MCP 生成代码里素材变量的命名；
+- 之后被 agent 改写成手写 CSS（不是 MCP 默认的 React + Tailwind），补了交互、中文无障碍标签和结构测试。
+
 它的数值就是 Figma 的数值（工具条 433 宽、内边距 4、圆角 10），不需要再量。归一化时：CSS 加作用域、去掉 JS（点击反馈、`fit()` 缩放）、交互状态改成 class、标记写进 `ui.py`，数值一个不改；`data-node-id` 留在注释里当出处。
 
 ## 1. 模具是什么
@@ -154,7 +161,7 @@ demofoundry/mold/
 - 做一集前对照 `mold.json`：缺组件、缺状态或 `qc` 不是 `pass`，先补模具（共创模式下先问人）。
 - 组件库有、但这一集用不上的东西，留在库里，由这一集自己决定不用。
 
-## 待定（需要你拍板）
+## 已定（2026-10-03）
 
-1. **改写「±0.3px」那条决策。** 决策记录现在写的是「还原精度保持高标准（±0.3px + 画面差分），自主模式也跑质检」。按 §0 / §6，建议改成：「还原精度靠证据优先级保证：有 Figma 用 Figma 原值（结构测试 + 叠加差分为 0），录屏验行为和状态（逐行并排），截图验尺寸颜色（±0.3px 对表）；自主模式也跑，不过就停」。同意的话加一行修订，不删原来那行。
-2. **你的 Figma 复刻是怎么做出来的？**（Figma MCP / Dev Mode / 别的工具，还是 agent 照着 Figma 写的？）决策记录里定的是「有链接 + 只读 token 用上游 `hyperframes figma`」。如果你现在的做法更可靠，模具 skill 应该教用户按你的做法来，这一条也要改。
+1. 「±0.3px」那条决策按 §6 改写（见决策记录）。
+2. Figma 输入多一条候选「Figma MCP + agent 改写」，和上游 `hyperframes figma` 一起放进 Figma 实验比较。

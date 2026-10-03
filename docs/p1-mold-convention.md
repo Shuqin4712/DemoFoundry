@@ -1,6 +1,6 @@
 # P1 · 模具约定（草案 v2）
 
-> 状态：**草稿，待认可**（2026-10-03）
+> 状态：**已认可**（2026-10-03）
 > v2 按 zeedemo 的实际做法和用户 2026-10-03 定的证据优先级重写（v1 只依据 `product-ui-rebuild` skill，把第一集的纯截图量测当成了唯一标准）。依据：
 > `shared/assets/canvas-ui/` 及各子库 README、`shared/proof/` 八个验收页、`shared/gen/zui.py`、`shared/proof/video-node.gen.py`、`reference/ui/` 的证据组织、第七集 `_build/gen.py`。
 > 这份定的是**模具里的东西长什么样、放在哪、怎么证明它对**；怎么一步步建模具是 `demofoundry-mold` skill 的事（P4）。发布前译成英文。
@@ -32,7 +32,7 @@ zeemo-ui-22182-1624/
   archive/              旧版本
 ```
 
-**它是怎么做出来的（推断，2026-10-03）**：用户是向老师要的复刻，不知道做法。从文件痕迹看，很可能是 **Figma MCP 取设计数据 + 编程 agent 改写**：
+**它是怎么做出来的（推断，2026-10-03）**：用户是向老师要的复刻，不知道做法。从文件痕迹看，很可能是 **Figma MCP 取设计数据 + 编程 agent 改写**（用户确认：Figma MCP + Codex）：
 
 - SVG 带 `preserveAspectRatio="none" overflow="visible" style="display: block;"`，图层名原样成了 id（`<g id="edit4"><path id="Union">`）——这是 Figma MCP 提供素材的写法，Figma 手动导出没有；
 - 每个子元素有真实的 Figma 子节点 id，只能从节点数据读到；Figma MCP 生成的代码正是逐元素标 `data-node-id`；

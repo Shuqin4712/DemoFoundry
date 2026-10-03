@@ -1,6 +1,6 @@
 # P1 · 抽取清单
 
-> 状态：**草稿 v2，待认可**（2026-10-03）。v2 在通读 zeedemo 全仓库后补了 §8–§9，修正了 `word_time`
+> 状态：**已认可**（2026-10-03）。v2 在通读 zeedemo 全仓库后补了 §8–§9，修正了 `word_time`
 > 范围：zeedemo 的 `shared/gen/zgen.py`、`shared/gen/zui.py`、`shared/tools/*.py`，逐函数标注；其余来源按文件列在最后。
 > 读法：这份清单只回答「搬不搬、怎么搬」，具体搬的动作在 P2 做。
 

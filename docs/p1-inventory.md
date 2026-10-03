@@ -4,6 +4,34 @@
 > 范围：zeedemo 的 `shared/gen/zgen.py`、`shared/gen/zui.py`、`shared/tools/*.py`，逐函数标注；其余来源按文件列在最后。
 > 读法：这份清单只回答「搬不搬、怎么搬」，具体搬的动作在 P2 做。
 
+## 0. 全部工具一览
+
+`D:\zeedemo` 下除上游 HyperFrames skill 以外的全部脚本，共 35 个文件（2026-10-03 全盘搜索，含未提交和被 gitignore 的目录；`zeedemo-main` 是空目录，第七集备份目录不算）。按用途排，后面各节逐个标注。
+
+| 用途 | 文件 | 能做什么 | 本清单 |
+| --- | --- | --- | --- |
+| 读录屏 | `shared/tools/recording.py` | `index`：找出界面每个状态在第几秒（时间中值滤掉光标、屏蔽一直在播的区域）→ 总览图 + 状态表 + JSON；`crop`：按像素框或按第 N 个变化裁证据图 | §5 |
+| 量截图 | `product-ui-rebuild/scripts/ref_profile.py` + `png.py` | 截图 → JSON：卡片包围盒（亚像素）、圆角、边框、面色、标题栏墨迹与笔画宽、结构骨架、暗色内容块、主色簇 | §7a |
+| 建组件库骨架 | `product-ui-rebuild/scripts/new_library.py` | 铺 tokens / index / README / 两个验收页 / 工具 | §7a |
+| 验收页里的测量 | `product-ui-rebuild/assets/proof-template.html`（JS） | `INK` 墨迹高、`STEM` 笔画宽、`INKW` 字号 + 字间距最小二乘、`WRAP` 逐行断点；`solve()` 反解 CSS 常数；`recheck()` 重算对表 | §7a |
+| 验收页生成 | `shared/proof/video-node.gen.py` | 调 `zui.py` 生成验收页，组件和录屏裁图并排 | §9 |
+| Figma 复刻自检 | `reference/ui/*/figma-recreation/structure.test.mjs`（3 个） | 检查复刻页保留了 Figma 节点 id、画板尺寸、文案、素材 | §9 |
+| 探针 / 量合成 | `make-fingerprint.py`（包装）+ `product-ui-rebuild/scripts/make_fingerprint.py` | 把子合成变成可单独驱动的页，严格 seek 后读几何 | §6、§7a |
+| 静态服务 | `shared/tools/serve.py`、`product-ui-rebuild/scripts/serve.py` | 不缓存的静态服务（两份相同） | §6 |
+| 配音 | `shared/tools/voice.py` | 生成 / 导入录音 → 转写对齐 → 逐词核对 → 量停顿 → 补破折号 → 在真实静音处切段 → 排布 → 预览 + 响度；`promote` 定稿 | §3 |
+| 演示素材 | `shared/tools/media.py` | 规格警告、改前改后逐帧比对、切点、改动区域、静帧 / 播放片段 / 胶片条 / 放大镜、对照总览 | §4 |
+| 音乐 | `videos/…image-node/_build/bgm-extend.py`；`…ugc-ad/assets/bgm/compose.py` | 按乐句接长曲子；代码合成音乐（试验，被否） | §9 |
+| 量参考片 | `shared/techniques/measure-reference.py` | 平均镜头长、静止占比、运镜（平移 / 缩放 / 旋转）、切点判定、动作事件 | §6 |
+| 技法卡片 | `shared/techniques/_beat.js`（+ 三张 catalog HTML） | 卡片渲染器：同一时钟循环、单帧步进、调速 | §7 |
+| 生成器 | `shared/gen/zgen.py`、`shared/gen/zui.py`、各集 `_build/gen.py`（6 个） | 时间轴、镜头、光标、片头片尾、主时间轴；界面标记；每集画面 | §1、§2、§8 |
+| 连线几何（JS） | `shared/assets/canvas-ui/wire.js` | `wireBetween` / `wire`：水平进出的贝塞尔连线 | §7a |
+| 开集 | `shared/tools/new-episode.py` | 从骨架模板建一集、建链接、可复制上一集生成器 | §6 |
+| 进度 | `zeemo-tutorial/scripts/status.py`（`.claude` 和 `.agents` 各一份，相同） | 按文件判断一集做到哪个阶段 | §9 |
+| 封面 | `shared/tools/cover.py` | `cover.json` → 模板 → 无头 Chrome 截图 | §6 |
+| 工作台 | `workbench/server.py`、`test_server.py`、`dist/app.js` | 本地看板、资料索引、进度与日志保存 | §7（P5） |
+
+zeedemo 调用、但不是自己写的（上游 HyperFrames skill / CLI）：`media-use/audio/scripts/heygen-tts.mjs`（HeyGen 配音）、`hyperframes-audio/scripts/carve.mjs`（人声避让）、`motion-doctrine/scripts/seam-stamp.mjs` / `seam-gate.mjs`（接缝登记与检查）、`npx hyperframes check / preview / render / snapshot / transcribe / tts`。这些不搬，通过锁版本的上游调用。
+
 ## 标注
 
 | 标注 | 意思 | P2 怎么处理 |
@@ -134,6 +162,24 @@
 | `shared/docs/SERIES-WORKFLOW.md` | 去品牌 | 十二个阶段压成五个后，拆进两个 skill 的 SKILL.md 和 references |
 | `workbench/`（`server.py`、`test_server.py`、`dist/`） | — | P5 重新设计时再标注 |
 | 上游脚本：`carve.mjs`（`hyperframes-audio`）、`seam-stamp.mjs` / `seam-gate.mjs`（`motion-doctrine`） | 不搬 | 通过锁版本的上游 skill 调用。注意 `motion-doctrine` 在上游仓库的 `.agents/skills/` 下（不是 `skills/`），算上游内部 skill，接口稳定性要在 P2 确认 |
+
+## 7a. `product-ui-rebuild` 的脚本与验收页 JS，`wire.js`
+
+整个 skill 已经很通用，归 `demofoundry-mold`。
+
+| 文件 / 函数 | 标注 | 改法 / 备注 |
+| --- | --- | --- |
+| `png.py`：`load`（无依赖 PNG 解码）、`lum`（Rec.709 亮度）、`edge`（亚像素边缘内插） | 通用 | `load` 只支持 8 位 RGB / RGBA；可以换成 Pillow（第七集 `gen.py` 已经在用 Pillow），`edge` 保留 |
+| `ref_profile.py`：`profile`（卡片 / 特写两种分支、媒体铺满判定、边框、圆角、面色交叉校验、标题栏墨迹与笔画宽、结构骨架、暗色内容块、主色簇） | 通用 | 写死了 retina 2x（`R2` 折半）和亮度阈值 16.5（按 Zeemo 深色界面定的）。改成按截图倍率和地面亮度自动取；浅色界面的产品要另测 |
+| `ref_profile.py` 的 `--all` 批量 | 通用 | 默认 glob `reference/ui/*/*.png` 改成模具证据目录 |
+| `new_library.py` | 改造 | 建模具骨架的起点。改成按模具约定 v2 的目录（`ui.py`、`proof/<子库>.gen.py`、`evidence/<功能>/`）铺 |
+| `make_fingerprint.py` | 通用 | 带「拒绝覆盖非点号文件」的护栏（曾覆盖过生产合成），保留 |
+| `serve.py` | 通用 | 和 `shared/tools/serve.py` 合成一份 |
+| `assets/proof-template.html`：`INK` / `STEM` / `INKW` / `WRAP` / `solve()` / `recheck()`、按时间戳逐个 `<link>` 防缓存 | 通用 | 截图量测验收的核心，原样搬，文案改英文 |
+| `assets/gallery-template.html` | 通用 | 裸摆总览页 |
+| `references/measurement.md`、`figma.md` | 通用 | 测量口径与陷阱、Figma 输入。英文化 |
+| `references/worked-example.md` | 专有 | Zeemo 的 81 项对表案例，换成示例集的案例 |
+| `shared/assets/canvas-ui/wire.js`：`wireBetween` / `wire` | 通用（几何） | 和 `zui.wire_between` 同一算法的 JS 版，端点外移是旧值 9（`zui` 是实测 5.75）。引擎重写连线几何时以 `zui` 版为准，JS 版给验收页用 |
 
 ## 8. 每集 `gen.py` 里反复出现的辅助函数（v1 漏掉的）
 

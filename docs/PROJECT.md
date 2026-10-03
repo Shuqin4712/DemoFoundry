@@ -4,7 +4,7 @@
 > 讨论过程和历史版本在设想文档 [生成式视频流水线 · 开源设想](https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9)，那边只作参考。
 > 发现这里写错了：直接改，或在「决策记录」里加一行说明为什么改。
 
-**当前阶段：P0 立项** · 最后更新：2026-10-03
+**当前阶段：P1 清单与约定**（P0 已完成，待开工） · 最后更新：2026-10-03
 
 ---
 
@@ -147,7 +147,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 
 | 阶段 | 做什么 | 完成标准 | 量 | 状态 |
 | --- | --- | --- | --- | --- |
-| P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | 🔄 |
+| P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | ✅ |
 | P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | ⬜ |
 | P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | ⬜ |
 | P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | ⬜ |
@@ -218,7 +218,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 上游 HyperFrames skill 用 `heygen-com/hyperframes#<tag>` 锁版本，tag 和 HyperFrames 命令行版本一致；skills CLI 本身也锁版本（`npx skills@1.7.0`） | 不写 ref 的锁文件恢复时会装成上游最新版（实测） |
 | 2026-10-03 | 三个 skill：`demofoundry`（引擎、初始化、入口）、`demofoundry-mold`、`demofoundry-episode`；后两个用 `../demofoundry/` 引用引擎。v1 仍是「建模具、做一集」两个工作流 | skills CLI 只复制 skill 自己的文件夹，两个 skill 共用的引擎必须住在某个 skill 里（实测）；HyperFrames 也用兄弟路径互相引用 |
 | 2026-10-03 | DemoFoundry skill 默认装在项目级 | 随产品仓库提交，每个仓库锁自己的引擎版本；也是 CLI 默认 |
-| 2026-10-03 | 产品仓库里的视频目录叫 `demofoundry/` | 一看就知道是谁建的，不和用户已有的 `videos/` 冲突 |
+| 2026-10-03 | 产品仓库里的视频目录叫 `demofoundry/` | — |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 
 ## 11. 待验证与风险
@@ -239,7 +239,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 一个仓库多个 skill | 可以。CLI 找出仓库里所有 `SKILL.md`；`--skill a b` 或 `--skill '*'` 一句装多个；`--list` 只列不装 |
 | 装进去的是什么 | **只复制 skill 自己那个文件夹**。仓库顶层的共享目录（如 `engine/`）不会装进去；skill 文件夹里的子目录会 |
 | 装到哪 | 只选 Claude Code 时直接复制到 `.claude/skills/<name>`；选多个 agent 时，正本放在 `.agents/skills/<name>`，`.claude/skills/<name>` 是指向正本的目录符号链接（本机能建；没开开发者模式的 Windows 用 `--copy`） |
-| 私有仓库 | 用本机 git 凭据克隆，和公开仓库同一条命令（占位 skill 阶段实测） |
+| 私有仓库 | 用本机 git 凭据克隆，和公开仓库同一条命令。`npx skills add Shuqin4712/DemoFoundry --skill '*' --agent claude-code codex -y` 装上三个占位 skill，`../demofoundry/engine/` 在 `.claude/skills/` 下也能找到 |
 | 锁文件锁不锁版本 | **不写 ref 就不锁**。zeedemo 的 `skills-lock.json` 没有 ref，恢复时 26 个 skill 全装成上游最新版，哈希全变，锁文件也被改写。安装源写成 `heygen-com/hyperframes#v0.8.110` 时，锁文件会记下 `"ref"`，删掉重装后文件哈希一致 |
 | 恢复命令 | `npx skills experimental_install`。**只装到 `.agents/skills/`**（Codex、Cursor 等 universal agent），会忽略 `--agent`，不给 Claude Code 建 `.claude/skills/` |
 | 上游 skill 之间怎么共享文件 | HyperFrames 的 skill 直接用相对路径引用兄弟 skill（如 `../hyperframes-core/references/...`），前提是一起装 |

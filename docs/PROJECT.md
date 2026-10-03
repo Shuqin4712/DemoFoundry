@@ -4,7 +4,7 @@
 > 讨论过程和历史版本在设想文档 [生成式视频流水线 · 开源设想](https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9)，那边只作参考。
 > 发现这里写错了：直接改，或在「决策记录」里加一行说明为什么改。
 
-**当前阶段：P1 清单与约定**（P0 已完成，待开工） · 最后更新：2026-10-03
+**当前阶段：P1 清单与约定** · 最后更新：2026-10-03
 
 ---
 
@@ -148,7 +148,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 阶段 | 做什么 | 完成标准 | 量 | 状态 |
 | --- | --- | --- | --- | --- |
 | P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | ✅ |
-| P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | ⬜ |
+| P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | 🔄 |
 | P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | ⬜ |
 | P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | ⬜ |
 | P4 两个 skill | 建模具（`product-ui-rebuild` 泛化 + 归一化 + 质检）；做一集（`zeemo-tutorial` 泛化，两种模式）；初始化命令 | 空仓库装 skill → 初始化 → 出预览，全程无需手工干预 | 大 | ⬜ |
@@ -174,9 +174,9 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 - [ ] 查 DemoFoundry 的商标和域名
 - [x] 验证 skills CLI：一个仓库多个 skill 的安装；`skills-lock.json` 的恢复命令（2026-10-03，结论见 §11）
 - [x] 定 skill 目录结构和初始化后的视频目录结构（2026-10-03，见 §4）
-- [ ] 抽取清单：逐函数标注 `zgen.py`、`zui.py`、`shared/tools/*.py`
-- [ ] 模具约定草案：组件、缩放、锚点、质检页
-- [ ] 发布包规格：MP4、SRT、封面、文案、短片段的命名和尺寸
+- [ ] 抽取清单：逐函数标注 `zgen.py`、`zui.py`、`shared/tools/*.py`（草稿 [p1-inventory.md](p1-inventory.md)，待认可）
+- [ ] 模具约定草案：组件、缩放、锚点、质检页（草稿 [p1-mold-convention.md](p1-mold-convention.md)，待认可）
+- [ ] 发布包规格：MP4、SRT、封面、文案、短片段的命名和尺寸（草稿 [p1-publish-spec.md](p1-publish-spec.md)，待认可）
 - [ ] 选型：本地免费配音引擎；ElevenLabs 等平台是否返回逐字时间戳
 - [ ] 选型：转写引擎按平台（Windows faster-whisper、Mac Parakeet）
 - [ ] 确认 `media-use` 的 BGM 路径在没有 HeyGen 账号时能做到什么程度

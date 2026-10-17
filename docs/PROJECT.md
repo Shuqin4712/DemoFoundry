@@ -4,7 +4,7 @@
 > 讨论过程和历史版本在设想文档 [生成式视频流水线 · 开源设想](https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9)，那边只作参考。
 > 发现这里写错了：直接改，或在「决策记录」里加一行说明为什么改。
 
-**当前阶段：P2 引擎抽取** · 最后更新：2026-10-03
+**当前阶段：P2 引擎抽取已完成，待拉齐**（P3 未开工） · 最后更新：2026-10-17
 
 ---
 
@@ -149,7 +149,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | --- | --- | --- | --- | --- |
 | P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | ✅ |
 | P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | ✅ |
-| P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | 🔄 |
+| P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | ✅ |
 | P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | ⬜ |
 | P4 两个 skill | 建模具（`product-ui-rebuild` 泛化 + 归一化 + 质检）；做一集（`zeemo-tutorial` 泛化，两种模式）；初始化命令 | 空仓库装 skill → 初始化 → 出预览，全程无需手工干预 | 大 | ⬜ |
 | P5 工作台开源版 | 重新设计并定功能范围；从仓库文件自动读数据；看板、模具浏览、预览入口；`serve.py` 并入；做成可选安装 | 界面冻结，可作拍摄对象 | 中 | ⬜ |
@@ -184,7 +184,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 - [x] 写测试小集的讲稿（与 Zeemo 无关，30 秒左右）：虚构笔记应用 Jot，5 段约 24 秒（2026-10-03，`tests/fixtures/jot/`）
 - [ ] P4：初始化时在 `demofoundry/` 里写 `.gitattributes`（`* text=auto eol=lf` + 媒体文件 binary）
 - [ ] P4：初始化时在 `demofoundry/` 里写 `.gitignore`：`episodes/*/assets/mold/`（生成时同步的模具副本）、`voice/_takes/`、`renders/`
-- [ ] 决定是否安装 `uv`（P2 的「脚本改用 uv」卡在这里；引擎已有标准 `pyproject.toml`）
+- [x] 安装并验证 `uv`：0.13.1；提交引擎 `uv.lock`，独立环境运行生成器及完整 23 项测试通过（2026-10-17）
 - [ ] P3：BGM 接长（泛化 zeedemo `bgm-extend.py`）；测试小集换成真的本地免费配音
 - [ ] P3 / P4：封面机制 + DemoFoundry 自己的默认封面模板
 - [ ] P4：建模具骨架、验收页模板（`solve()` / `recheck()`）、进度检查 `status.py` 搬进两个 skill
@@ -243,6 +243,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 生成时把模具的 css / icons / fonts 同步到集目录 `assets/mold/`（不提交），不用符号链接 | HyperFrames 只读集目录；符号链接在 Windows 要开发者模式 |
 | 2026-10-03 | 测试小集用虚构笔记应用「Jot」，模具是夹具（不是从证据重建的），回归 = 重新生成后和提交的产物逐字节比较 | 与 Zeemo 无关；不依赖网络和配音即可跑 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
+| 2026-10-17 | 引擎统一通过 `uv run --locked --project <engine路径>` 运行；提交 `uv.lock`，不提交 `.venv`；本机用 `python -m pip install --user uv` 安装 | 用户同意安装；独立环境管理依赖，运行时不隐式升级依赖；本机 uv 0.13.1 验证通过 |
 
 ## 11. 待验证与风险
 

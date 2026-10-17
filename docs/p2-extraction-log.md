@@ -62,8 +62,19 @@ DF_HF_CHECK=1 python -m unittest discover -s tests   # 另跑 hyperframes check
 
 | 项 | 挪到 | 原因 |
 | --- | --- | --- |
-| 脚本改用 `uv` | 待定 | 本机没装 `uv`，安装要你同意；引擎已按标准 `pyproject.toml` 写好，装上即可用 |
+| 脚本改用 `uv` | 已完成（2026-10-17） | 用户授权后安装 uv 0.13.1，生成 `uv.lock`，通过独立虚拟环境完成验收；见 §6 |
 | BGM 接长（`bgm-extend.py`） | P3 | 参数是按那一首曲子调的，要先泛化 |
 | 封面（`cover.py` 机制） | P3 / P4 | 需要一个 DemoFoundry 自己的默认封面模板 |
 | 建模具骨架、验收页模板、`solve()` / `recheck()`、进度检查 `status.py` | P4 | 属于两个 skill 的流程 |
 | 配音来源接口、本地免费引擎、ElevenLabs | P3 | 计划表 |
+
+## 6. P2 收尾验收（2026-10-17）
+
+- 用户授权安装 uv；通过 `python -m pip install --user uv` 安装 0.13.1。
+- 引擎新增 `uv.lock`，基础运行只安装本地引擎与 numpy；可选 whisper / image 依赖已解析，尚未安装或验证。
+- 从现有 Python 3.13.5 创建独立 `.venv`，不依赖全局 numpy；README 统一为 `uv run --locked --project <engine路径>`，PATH 尚未刷新时可用 `python -m uv`。
+- 命令入口 `demofoundry recording --help` 通过；23 项测试在 uv 环境中全部通过（63.8 秒，含 HyperFrames 0.8.114 check）。生成产物与已提交基准逐字节一致。本次未重新渲染 MP4，沿用 §1 与 §4 的渲染记录。
+- 锁文件有 41 个包（含可选依赖的跨 Python 版本解析），基础环境实际安装 2 个包。跨盘缓存硬链接失败时 uv 自动复制，不影响运行。
+- P2 标完成，P3 保持未开始，先与用户拉齐。
+
+拉齐边界：引擎生成与回归已通过；Jot 仍使用静音音频和模拟词时间，不能作为真实旁白能力的证明；Figma 归一化、锚点质检和两个 skill 的端到端流程仍在 P4；本地配音、SRT 与 BGM 接长仍在 P3。

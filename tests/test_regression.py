@@ -1,6 +1,6 @@
 """Regression and unit tests for the engine.
 
-  python -m unittest discover -s tests -v
+  uv run --locked --project skills/demofoundry/engine python -m unittest discover -s tests -v
 
 Regression: the fixture episode (tests/fixtures/jot) is regenerated in a temp copy and its output
 compared byte for byte with the committed files. An intended change shows up as a diff: regenerate

@@ -4,7 +4,7 @@
 > 讨论过程和历史版本在设想文档 [生成式视频流水线 · 开源设想](https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9)，那边只作参考。
 > 发现这里写错了：直接改，或在「决策记录」里加一行说明为什么改。
 
-**当前阶段：P2 引擎抽取已完成，待拉齐**（P3 未开工） · 最后更新：2026-10-17
+**当前阶段：P3 配音与音乐** · 最后更新：2026-10-17
 
 ---
 
@@ -118,9 +118,9 @@ demofoundry/
 
 DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，DemoFoundry 负责「怎么为一个产品持续生产这些 HTML」。
 
-- 命令行不用单独装（`npx` 锁版本自动下载）；HyperFrames 的 skill 由锁文件一条命令恢复；系统要有 Node 22+、Python、ffmpeg。
+- 命令行不用单独装（`npx hyperframes@latest` 自动下载）；HyperFrames 命令运行时取 `@latest`，上游 skill 在初始化/更新时从当前上游安装；系统要有 Node 22+、Python、ffmpeg。
 - **强绑定**：生成的 HTML 合成格式；预览、检查、渲染。**中等**：配音和转写调用、人声避让属性、上游动效 skill。**不绑定**：模具、质检、技法卡片、录屏和素材工具、工作台、按词对齐的方法。
-- 策略：接受依赖、锁版本、加回归测试；把输出 HyperFrames 格式的代码收进一个模块，给以后换引擎留口子。不自己写渲染器，不改用 Remotion。
+- 策略：接受依赖、跟随最新版、记录当次实际版本并跑回归测试；把输出 HyperFrames 格式的代码收进一个模块，给以后换引擎留口子。不自己写渲染器，不改用 Remotion。
 
 ## 7. v1 范围
 
@@ -150,7 +150,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | P0 立项 | 建仓库；验证 skills CLI 多 skill 安装和锁文件恢复；定 skill 目录与初始化后的视频目录结构 | 一个占位 skill 能从仓库一句话装上 | 小 | ✅ |
 | P1 清单与约定 | 逐函数标注 `zgen.py`、`zui.py`、工具脚本（通用 / 去品牌 / 专有）；模具约定草案；发布包规格 | 三份文档认可 | 小 | ✅ |
 | P2 引擎抽取 | 通用代码搬入；片头片尾去品牌、可换主题；HyperFrames 输出收进一个模块；脚本改用 `uv`；与 Zeemo 无关的测试小集作回归基准 | 测试小集能生成、`check` 通过、回归测试跑通 | 中 | ✅ |
-| P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | ⬜ |
+| P3 配音与音乐 | 配音来源接口；转写引擎按平台；BGM 两条路线 + 授权记录；产出 SRT | 测试小集不花钱、在 Windows 上从讲稿跑到成片 | 中 | 🔄 |
 | P4 两个 skill | 建模具（`product-ui-rebuild` 泛化 + 归一化 + 质检）；做一集（`zeemo-tutorial` 泛化，两种模式）；初始化命令 | 空仓库装 skill → 初始化 → 出预览，全程无需手工干预 | 大 | ⬜ |
 | P5 工作台开源版 | 重新设计并定功能范围；从仓库文件自动读数据；看板、模具浏览、预览入口；`serve.py` 并入；做成可选安装 | 界面冻结，可作拍摄对象 | 中 | ⬜ |
 | P6 示例两集 | 「从零开一个系列」「重建并质检一个组件」；记录重建耗时、质检通过率、第二集省多少 | 两支成片 + 一组数字 | 大 | ⬜ |
@@ -177,15 +177,16 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 - [x] 抽取清单：逐函数标注 `zgen.py`、`zui.py`、`shared/tools/*.py`（[p1-inventory.md](p1-inventory.md)，2026-10-03 认可）
 - [x] 模具约定草案：组件、缩放、锚点、质检页（[p1-mold-convention.md](p1-mold-convention.md)，2026-10-03 认可）
 - [x] 发布包规格：MP4、SRT、封面、文案、短片段的命名和尺寸（[p1-publish-spec.md](p1-publish-spec.md)，2026-10-03 认可）
-- [ ] 选型：本地免费配音引擎；ElevenLabs 等平台是否返回逐字时间戳
+- [x] 本地免费配音选 Kokoro ONNX（CPU 实测）；ElevenLabs 官方接口返回字符时间戳，可转成词时间；适配器已接，付费 API 未实测（2026-10-17）
 - [ ] 选型：转写引擎按平台（Windows faster-whisper、Mac Parakeet）
-- [ ] 确认 `media-use` 的 BGM 路径在没有 HeyGen 账号时能做到什么程度
+- [x] 核对 `media-use` BGM：曲库检索需 HeyGen CLI 登录；无账号可导入已有授权曲目，生成另依赖 provider/key 或本地模型；本次未实测账号路线（2026-10-17）
 - [ ] 确认工作台能否代为启动某一集的 Studio 预览
 - [x] 写测试小集的讲稿（与 Zeemo 无关，30 秒左右）：虚构笔记应用 Jot，5 段约 24 秒（2026-10-03，`tests/fixtures/jot/`）
 - [ ] P4：初始化时在 `demofoundry/` 里写 `.gitattributes`（`* text=auto eol=lf` + 媒体文件 binary）
 - [ ] P4：初始化时在 `demofoundry/` 里写 `.gitignore`：`episodes/*/assets/mold/`（生成时同步的模具副本）、`voice/_takes/`、`renders/`
 - [x] 安装并验证 `uv`：0.13.1；提交引擎 `uv.lock`，独立环境运行生成器及完整 23 项测试通过（2026-10-17）
-- [ ] P3：BGM 接长（泛化 zeedemo `bgm-extend.py`）；测试小集换成真的本地免费配音
+- [x] P3：BGM 接长已泛化为显式乐句边界 + 交叉淡化（测试信号验证）；Jot 实验副本已生成真实免费旁白成片，保留静音回归基准（2026-10-17）
+- [ ] P3：本地配音试听；真实授权 BGM 的接长/人声避让与发布清单端到端验证；字幕极短片段与专名断行规则
 - [ ] P3 / P4：封面机制 + DemoFoundry 自己的默认封面模板
 - [ ] P4：建模具骨架、验收页模板（`solve()` / `recheck()`）、进度检查 `status.py` 搬进两个 skill
 
@@ -244,6 +245,8 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | 2026-10-03 | 测试小集用虚构笔记应用「Jot」，模具是夹具（不是从证据重建的），回归 = 重新生成后和提交的产物逐字节比较 | 与 Zeemo 无关；不依赖网络和配音即可跑 |
 | 2026-10-03 | 初始化时用 `skills add <源>#<tag> --skill … --agent claude-code codex -y` 装上游 skill，不依赖 `experimental_install` | 恢复命令只装到 `.agents/skills/`，Claude Code 读不到（实测） |
 | 2026-10-17 | 引擎统一通过 `uv run --locked --project <engine路径>` 运行；提交 `uv.lock`，不提交 `.venv`；本机用 `python -m pip install --user uv` 安装 | 用户同意安装；独立环境管理依赖，运行时不隐式升级依赖；本机 uv 0.13.1 验证通过 |
+| 2026-10-17 | 修订 HyperFrames 版本策略：运行命令使用 `hyperframes@latest`，上游 skill 初始化/更新时跟随上游当前版本；验证记录写明当次实际版本，不再锁定 0.8.114 | 用户明确要求实时更新；保留回归检查及版本记录，便于定位升级问题 |
+| 2026-10-17 | 本地免费配音接 Kokoro ONNX，词时间来自 faster-whisper；导入仍默认，ElevenLabs 走官方字符时间戳接口；模型缓存不随 skill 分发 | Windows CPU 已跑通免费讲稿到 1080p60 成片；模型与运行库许可见 P3 记录；付费路线不作免费验收前提 |
 
 ## 11. 待验证与风险
 
@@ -251,7 +254,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 | --- | --- | --- |
 | ~~skills CLI 能否一句话装多个 skill、恢复上游 skill~~ | 安装体验 | 已验证（2026-10-03），见下方「skills CLI 实测」 |
 | 换一个产品，重建要多久、质检能否稳定通过 | 核心价值是否成立 | P6 数字 + 私下试验 |
-| HyperFrames 还在 0.8.x，升级可能破坏输出 | 维护成本 | 锁版本 + 回归测试 |
+| HyperFrames 实时升级可能破坏输出 | 维护成本 | `@latest` + 当次实际版本记录 + 回归测试；失败时明确报告 |
 | 上游 Figma 导入的质量 | v1 的 Figma 路径是否可靠 | Figma 实验（暂缓） |
 | Node + Python 双环境门槛 | 新用户流失 | `uv` + 初始化时环境检查 |
 | 只在 Windows 上验证（手头没有 Mac） | 跨平台问题 | 平台差异收在脚本内部（见下）；发布前找 Mac 用户试，或 CI |
@@ -282,6 +285,7 @@ DemoFoundry 架在 HyperFrames 上：HyperFrames 把 HTML 渲染成视频，Demo
 
 ## 12. 参考
 
+- P3 推进记录（真实配音、成片、失败与剩余验证）：[p3-progress.md](p3-progress.md)
 - P2 引擎抽取记录（对拍结果、改掉的问题、挪到后面的项）：[p2-extraction-log.md](p2-extraction-log.md)
 
 - 设想文档（讨论过程）：<https://claude.ai/code/artifact/2217212a-3639-4cf0-a3a9-ea7172a8bcf9>

@@ -3,7 +3,7 @@
   "series": "Jot Tutorials",
   "canvas": [1920, 1080],
   "fps": 60,
-  "hyperframes": "0.8.114",
+  "hyperframes": "latest",
   "theme": {
     "ground": "#0b0d10",
     "ink": "#f3f5f7",

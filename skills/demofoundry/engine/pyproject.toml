@@ -13,6 +13,7 @@ dependencies = [
 whisper = ["faster-whisper>=1.0"]
 # node glow colours picked from images
 image = ["pillow>=10.0"]
+local = ["kokoro-onnx>=0.4", "soundfile>=0.12", "faster-whisper>=1.0"]
 
 [project.scripts]
 demofoundry = "demofoundry.__main__:main"

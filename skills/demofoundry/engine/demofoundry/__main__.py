@@ -1,5 +1,8 @@
 """Command line: ``python -m demofoundry <command> ...`` (or ``demofoundry <command>`` when installed).
 
+  tts          local Kokoro or ElevenLabs narration
+  srt          captions from final word times
+  master       explicit two-pass final loudness normalization
   voice        recordings → aligned, checked, cut, laid-out narration
   recording    index a product screen recording; crop evidence frames
   refprofile   measure screenshots into JSON
@@ -13,7 +16,7 @@ import os
 import runpy
 import sys
 
-COMMANDS = {'voice': 'voice', 'recording': 'recording', 'refprofile': 'refprofile', 'bgm': 'bgm',
+COMMANDS = {'master': 'master', 'tts': 'tts', 'srt': 'srt', 'voice': 'voice', 'recording': 'recording', 'refprofile': 'refprofile', 'bgm': 'bgm',
             'fingerprint': 'fingerprint', 'serve': 'serve'}
 
 

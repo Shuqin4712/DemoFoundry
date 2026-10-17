@@ -26,7 +26,7 @@ from demofoundry import cues, fx, hf, intro, scene, stage, theme, voice  # noqa:
 FIXTURE = os.path.join(HERE, 'fixtures', 'jot')
 EPISODE = os.path.join('demofoundry', 'episodes', '01-quick-note')
 GENERATED = ['index.html', 'compositions/frames/01-story.html', 'compositions/frames/02-end-card.html']
-HF_VERSION = '0.8.114'
+HF_VERSION = 'latest'
 
 
 def read_bytes(p):
@@ -76,9 +76,28 @@ class FixtureRegression(unittest.TestCase):
         for f in os.listdir(src):
             if f.endswith('.wav'):
                 shutil.copy(os.path.join(src, f), dst)
+        # Cache the script for this browser integration test only. Byte regression above
+        # still compares the authored CDN reference; a CDN stall must not masquerade as a GPU failure.
+        from urllib.request import urlopen
+        vendor = os.path.join(self.ep, 'assets', 'vendor')
+        os.makedirs(vendor, exist_ok=True)
+        with urlopen(hf.GSAP_CDN, timeout=45) as response:
+            with open(os.path.join(vendor, 'gsap.min.js'), 'wb') as out:
+                out.write(response.read())
+        index = os.path.join(self.ep, 'index.html')
+        with open(index, encoding='utf-8') as f:
+            original = f.read()
+            html = original.replace(hf.GSAP_CDN, 'assets/vendor/gsap.min.js')
+        with open(index, 'w', encoding='utf-8', newline='\n') as f:
+            f.write(html)
         npx = shutil.which('npx')
-        r = subprocess.run([npx, '--yes', f'hyperframes@{HF_VERSION}', 'check'], cwd=self.ep, capture_output=True, text=True, encoding='utf-8', errors='replace')
-        self.assertEqual(r.returncode, 0, r.stdout[-3000:])
+        try:
+            r = subprocess.run([npx, '--yes', f'hyperframes@{HF_VERSION}', 'check', '--no-browser-gpu', '--timeout', '10000'],
+                               cwd=self.ep, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=180)
+        finally:
+            with open(index, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(original)
+        self.assertEqual(r.returncode, 0, (r.stdout + r.stderr)[-5000:])
 
 
 class Cues(unittest.TestCase):

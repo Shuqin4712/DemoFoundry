@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npx --yes hyperframes@0.8.114 preview",
-    "check": "npx --yes hyperframes@0.8.114 check",
-    "render": "npx --yes hyperframes@0.8.114 render"
+    "dev": "npx --yes hyperframes@latest preview",
+    "check": "npx --yes hyperframes@latest check",
+    "render": "npx --yes hyperframes@latest render"
   }
 }

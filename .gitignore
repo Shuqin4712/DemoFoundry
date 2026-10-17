@@ -11,3 +11,6 @@ renders/
 **/voice/_takes/
 tests/fixtures/**/voice/final/clips/*.wav
 *.egg-info/
+
+# Local P3 runs and model downloads
+.tmp/

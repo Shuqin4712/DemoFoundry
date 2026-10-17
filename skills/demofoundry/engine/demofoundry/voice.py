@@ -318,13 +318,20 @@ def transcribe_whisper(wav, model='small.en'):
         die('transcription needs faster-whisper: install the engine with the "whisper" extra '
             '(uv: `uv sync --extra whisper`; pip: `pip install faster-whisper`)')
     m = WhisperModel(model, device='cpu', compute_type='int8')
-    segs, _ = m.transcribe(wav, word_timestamps=True, language='en')
+    segs, _ = m.transcribe(whisper_samples(wav), word_timestamps=True, language='en')
     return [{'text': w.word.strip(), 'start': round(w.start, 3), 'end': round(w.end, 3)} for s in segs for w in s.words]
+
+
+def whisper_samples(wav):
+    """Decode through system ffmpeg; avoids PyAV API differences across releases."""
+    result = subprocess.run([which.ffmpeg(), '-v', 'error', '-i', str(wav), '-ac', '1', '-ar', '16000',
+                             '-f', 'f32le', '-'], capture_output=True, check=True)
+    return np.frombuffer(result.stdout, dtype=np.float32).copy()
 
 
 def transcribe_parakeet(wav):
     with tempfile.TemporaryDirectory() as td:
-        r = subprocess.run([*which.npx(), 'hyperframes', 'transcribe', wav, '--engine', 'parakeet', '--json', '-d', td],
+        r = subprocess.run([*which.npx(), 'hyperframes@latest', 'transcribe', wav, '--engine', 'parakeet', '--json', '-d', td],
                            capture_output=True, text=True, encoding='utf-8', errors='replace')
         out = r.stdout.strip().splitlines()
         info = json.loads(out[-1]) if out and out[-1].startswith('{') else {}
